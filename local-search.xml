@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>笔记本电脑屏幕画面突然颜色鲜艳，如何解决</title>
+    <link href="/2023/12/13/%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/"/>
+    <url>/2023/12/13/%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/</url>
+    
+    <content type="html"><![CDATA[<p>今天在使用笔记本电脑的时候，突然发现电脑屏幕显示的图像变得十分鲜艳，亮度变大。</p><p>一开始还以为是屏幕颜色设置问题，于是关闭了电脑屏幕的夜间模式、护眼模式。</p><p>查看了辅助功能里面的对比度主题和颜色滤镜，发现都没有打开(我用的电脑系统是Windows11)。</p><p>最后经过不断查找，发现是显卡设置的问题。</p><h2 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h2><p>我的电脑处理器和显卡是AMD Ryzen 7 6800H with Radeon Graphics，也就是说显卡是属于A卡。</p><p>在桌面点击鼠标右键，会看到AMD Software꞉ Adrenalin Edition这个选项，点击鼠标左键。</p><p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/108-%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/attachments-20231125-121515-3b2f8c1f2252d0ed33ed73b8dc456b0f_MD5.png" alt="3b2f8c1f2252d0ed33ed73b8dc456b0f_MD5"></p><p>如果找不到，或者桌面左下角按开始，选择所有应用，也能看到AMD Software꞉ Adrenalin Edition这个选项，点击鼠标左键。</p><p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/108-%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/attachments-20231125-121512-b9edf19c1063e15a11a70cba24e00e66_MD5.png" alt="b9edf19c1063e15a11a70cba24e00e66_MD5"></p><p>打开之后，点击左上角的游戏按钮，然后点击显示器，在出现的页面中选择关闭“Vari-Bright”，就能解决色彩过度鲜艳的问题。</p><p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/108-%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/attachments-20231125-121510-961a7c29a5dfa54a0058d84e6c1b5752_MD5.png" alt="961a7c29a5dfa54a0058d84e6c1b5752_MD5"></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>test2</title>
     <link href="/2023/12/02/test2/"/>
     <url>/2023/12/02/test2/</url>
