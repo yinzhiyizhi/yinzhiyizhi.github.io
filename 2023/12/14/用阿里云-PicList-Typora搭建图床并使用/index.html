@@ -1,0 +1,969 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="星空人生">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是图床就是专门用来存放图片，同时允许你把图片对外连接的网上空间，不少图床都是免费的。(来自百度百科) 选免费还是付费有不少的免费图床，其中有不少还是不错的，不过大部分并不稳定，而且有不少是国外的，访问速度不太好。 我需要安全可靠和访问速度稳定，如果是自用的话，一般并不需要太多的容量。 如果有人要存几百GB几T大小的图片，我建议还是买个移动硬盘或者弄个家用NAS好了 而且如果不是经常给别人访问的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用阿里云+PicList+Typora搭建图床并使用">
+<meta property="og:url" content="https://blog.starlife.top/2023/12/14/%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91-PicList-Typora%E6%90%AD%E5%BB%BA%E5%9B%BE%E5%BA%8A%E5%B9%B6%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="什么是图床就是专门用来存放图片，同时允许你把图片对外连接的网上空间，不少图床都是免费的。(来自百度百科) 选免费还是付费有不少的免费图床，其中有不少还是不错的，不过大部分并不稳定，而且有不少是国外的，访问速度不太好。 我需要安全可靠和访问速度稳定，如果是自用的话，一般并不需要太多的容量。 如果有人要存几百GB几T大小的图片，我建议还是买个移动硬盘或者弄个家用NAS好了 而且如果不是经常给别人访问的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0010.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0030.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-359e608756970e82a36783afeccc81b.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0000.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-fe5653772f09c4ea6be6f06f99a7bf4.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127160859787.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-8010.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127162913102.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127165930064.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-e400b225f9e7788f73170524c9676db.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127172654667.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-e1b624976554eb7cc5bca84603ff6d8.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-36b66e2c6a431532dfa3e92b8478229.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-139ad854b18241b1519abcadee2b351.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-19398c99e507e59b32593b2425bfdb9.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0330.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231130164448353.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0350.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231129092707121.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-ff546d94dbf5d6e6710fbdb19a21398.png">
+<meta property="og:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-8010-1701335544239-1.png">
+<meta property="article:published_time" content="2023-12-14T09:48:20.000Z">
+<meta property="article:modified_time" content="2023-12-15T08:16:36.000Z">
+<meta property="article:author" content="星空人生">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0010.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>用阿里云+PicList+Typora搭建图床并使用 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.starlife.top","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="用阿里云+PicList+Typora搭建图床并使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-14 17:48" pubdate>
+          2023年12月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">用阿里云+PicList+Typora搭建图床并使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="什么是图床"><a href="#什么是图床" class="headerlink" title="什么是图床"></a>什么是图床</h2><p>就是专门用来存放图片，同时允许你把图片对外连接的网上空间，不少图床都是免费的。(来自百度百科)</p>
+<h2 id="选免费还是付费"><a href="#选免费还是付费" class="headerlink" title="选免费还是付费"></a>选免费还是付费</h2><p>有不少的免费图床，其中有不少还是不错的，不过大部分并不稳定，而且有不少是国外的，访问速度不太好。</p>
+<p>我需要安全可靠和访问速度稳定，如果是自用的话，一般并不需要太多的容量。</p>
+<p>如果有人要存几百GB几T大小的图片，我建议还是买个移动硬盘或者弄个家用NAS好了<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0010.png" srcset="/img/loading.gif" lazyload></p>
+<p>而且如果不是经常给别人访问的话，流量费用也会很少。</p>
+<h2 id="选什么公司的云服务"><a href="#选什么公司的云服务" class="headerlink" title="选什么公司的云服务"></a>选什么公司的云服务</h2><p>建立图床需要的是购买对象存储OSS，我对比了腾讯云、阿里云、华为云的价格。</p>
+<p>发现如果按照我的要求，需要存储使用的图片数量并不多，只需要买一个低价的存储包，流量费用选择按需付费就可以了。</p>
+<p>阿里云和华为云都有9元一年40GB空间的存储包，腾讯云没有<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0030.png" srcset="/img/loading.gif" lazyload></p>
+<p>流量费用的话，用标准存储的话价格基本一样，就是阿里云的外网流出流量会有分闲时忙时，不过区别不大。</p>
+<p>具体内容可以查询以下网址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.aliyun.com/price/product#/oss/detail/ossbag">阿里云对象存储OSS定价详情</a></p>
+<p><a target="_blank" rel="noopener" href="https://buy.cloud.tencent.com/price/cos">腾讯云对象存储OSS定价详情</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.huaweicloud.com/pricing/calculator.html#/obs">华为云对象存储OSS定价详情</a></p>
+<p>经过综合选择，我决定先用阿里云做我的图床。</p>
+<p>再加上我发现阿里云有对象存储OSS的免费试用，内容包括标准存储包 20 GB，下行流量包 2 GB，请求包 20 万次，为期三个月。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-359e608756970e82a36783afeccc81b.png" srcset="/img/loading.gif" lazyload alt="359e608756970e82a36783afeccc81b"></p>
+<p>大家可以在<a target="_blank" rel="noopener" href="https://free.aliyun.com/?userCode=b19efhwl">阿里云免费试用</a>这里找到对象存储OSS的免费试用，最好先试用一下，试用过之后就知道自己要不要继续用下去了<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0000.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云服务配置"><a href="#云服务配置" class="headerlink" title="云服务配置"></a>云服务配置</h2><p>选择好哪家公司的云服务之后，接下来就是开通和设置相关的内容了。</p>
+<p>以我选择的阿里云为例，注册好账号，绑定实名身份，在<a target="_blank" rel="noopener" href="https://free.aliyun.com/?userCode=b19efhwl">阿里云免费试用</a>这里找到对象存储OSS的免费试用，选择立即试用，地域选中国内地，勾选服务协议，点击立即试用就成功了。</p>
+<p>进入<a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/">对象存储OSS</a>页面，它会提示我们开通对象存储OSS，选择开通。</p>
+<p>开通后进入<a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/">对象存储OSS</a>页面，在左边点击Bucket列表，然后再点击创建Bucket</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-fe5653772f09c4ea6be6f06f99a7bf4.png" srcset="/img/loading.gif" lazyload alt="fe5653772f09c4ea6be6f06f99a7bf4"></p>
+<p>在出现的页面里面填写创建Bucket的名字(要确定好，创建之后不可修改)，存储类型一般选标准存储，因为经常用。</p>
+<p>存储冗余类型里面的本地冗余存储和同城冗余存储，按照需要自己选择，同城会比本地的贵，另外试用给的存储空间是本地冗余存储。</p>
+<p>读写权限一定要选 <strong>公共读</strong> ，这样其它设备才能通过我们的图片链接访问我们的图片。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127160859787.png" srcset="/img/loading.gif" lazyload alt="image-20231127160859787"></p>
+<p>Bucket功能那里按需选择，不过需要注意是否收费。</p>
+<p>对于是否要开启版本控制，官方解释是这样的：</p>
+<blockquote>
+<p>版本控制是针对存储空间（Bucket）级别的数据保护功能。开启版本控制后，针对数据的覆盖和删除操作将会以历史版本的形式保存下来。您在错误覆盖或者删除对象（Object）后，能够将Bucket中存储的Object恢复至任意时刻的历史版本。</p>
+</blockquote>
+<blockquote>
+<p>版本控制功能本身不收取任何费用，但对当前版本和所有历史版本的文件都会收取存储费用。为避免不必要的存储费用，请及时删除不需要的历史版本文件，详请参见<a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/173534.html?spm=5176.8466032.bucket.11.1bd61450fx13rp"> 计费文档 </a>。</p>
+</blockquote>
+<p>如果对数据安全有要求的，可以开启，一切都要看自己的需要。</p>
+<p>不过这里可以开一下服务端加密方式的OSS完全托管，因为是免费的，最起码现在是免费的。<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-8010.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127162913102.png" srcset="/img/loading.gif" lazyload alt="image-20231127162913102"></p>
+<p>选好功能后就可以点击确定，这样就创建好Bucket了。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127165930064.png" srcset="/img/loading.gif" lazyload alt="image-20231127165930064"></p>
+<h3 id="创建AccessKey"><a href="#创建AccessKey" class="headerlink" title="创建AccessKey"></a>创建AccessKey</h3><p>在<a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/overview">阿里云对象存储OSS</a>点击右上角的账号，点击AccessKey管理。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-e400b225f9e7788f73170524c9676db.png" srcset="/img/loading.gif" lazyload alt="e400b225f9e7788f73170524c9676db"></p>
+<p>出现提示，选择开始使用子用户AccessKey。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231127172654667.png" srcset="/img/loading.gif" lazyload alt="image-20231127172654667"></p>
+<p>点击创建用户，输入登陆名称，访问方式选<strong>OpenAPI调用访问</strong>，点击确定，然后进行安全认证。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-e1b624976554eb7cc5bca84603ff6d8.png" srcset="/img/loading.gif" lazyload alt="e1b624976554eb7cc5bca84603ff6d8"></p>
+<p>认证成功后，会出现有<strong>AccessKey ID</strong>和<strong>AccessKey Secret</strong>的页面，一定要<strong>做好备份</strong>，等会要用到，而且之后就再也找不到了！</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-36b66e2c6a431532dfa3e92b8478229.png" srcset="/img/loading.gif" lazyload alt="36b66e2c6a431532dfa3e92b8478229"></p>
+<p>做好备份后点击左边的用户，回到用户页面，找到刚创建的用户，点击右边的添加权限。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-139ad854b18241b1519abcadee2b351.png" srcset="/img/loading.gif" lazyload alt="139ad854b18241b1519abcadee2b351"></p>
+<p>选择 <strong>AliyunOSSFullAccess 管理对象存储服务（OSS）权限</strong> 和 <strong>AliyunOSSReadOnlyAccess 只读访问对象存储服务（OSS）的权限</strong> 这两个权限，点击确定，完成验证，阿里云的设置就完成了。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-19398c99e507e59b32593b2425bfdb9.png" srcset="/img/loading.gif" lazyload alt="19398c99e507e59b32593b2425bfdb9"></p>
+<blockquote>
+<p>为了防止大家可能遇到爬虫攻击或者其他情况，就尽量不要在阿里云账号余额里存过多的钱，不然可能一晚上起来余额就空了。</p>
+<p>资源包一定要根据自己创建和使用的Bucket进行购买，比如标准存储就买标准存储的，低频存储的就买低频存储的，<strong>千万不要买错了，买错了不能反悔</strong>。</p>
+<p>当然标准的本地冗余存储包比较便宜，但是粗略看了一下其他几个Burket选项都挺贵的，购买之前一定要确认清楚自己的需求和使用的Bucket类型。 </p>
+<p>如果对于费用计费有顾虑，可以阅读“资源包管理“中的<a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/oss/product-overview/why-am-i-still-in-arrears-after-i-purchase-a-resource-plan#concept-56181-zh">“购买了资源包为什么还会欠费？”</a>，里面都有相关解释。</p>
+</blockquote>
+<h2 id="配置和使用PicList"><a href="#配置和使用PicList" class="headerlink" title="配置和使用PicList"></a>配置和使用PicList</h2><p>PicList是一个开源软件，开源地址：<a target="_blank" rel="noopener" href="https://github.com/Kuingsmile/PicList">https://github.com/Kuingsmile/PicList</a></p>
+<p>软件教程地址：<a target="_blank" rel="noopener" href="https://piclist.cn/app.html">https://piclist.cn/app.html</a></p>
+<p>软件下载地址：<a target="_blank" rel="noopener" href="https://github.com/Kuingsmile/PicList/releases/latest">https://github.com/Kuingsmile/PicList/releases/latest</a></p>
+<h3 id="直链下载地址-："><a href="#直链下载地址-：" class="headerlink" title="直链下载地址 ："></a>直链下载地址 ：</h3><h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-Setup-2.6.7-ia32.exe">https://release.piclist.cn/latest/PicList-Setup-2.6.7-ia32.exe</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-Setup-2.6.7-x64.exe">https://release.piclist.cn/latest/PicList-Setup-2.6.7-x64.exe</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-Setup-2.6.7.exe">https://release.piclist.cn/latest/PicList-Setup-2.6.7.exe</a></p>
+</li>
+</ul>
+<h4 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-2.6.7.AppImage">https://release.piclist.cn/latest/PicList-2.6.7.AppImage</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/piclist_2.6.7_amd64.snap">https://release.piclist.cn/latest/piclist_2.6.7_amd64.snap</a></p>
+</li>
+</ul>
+<h4 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-2.6.7-arm64.dmg">https://release.piclist.cn/latest/PicList-2.6.7-arm64.dmg</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-2.6.7-x64.dmg">https://release.piclist.cn/latest/PicList-2.6.7-x64.dmg</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://release.piclist.cn/latest/PicList-2.6.7-universal.dmg">https://release.piclist.cn/latest/PicList-2.6.7-universal.dmg</a></p>
+</li>
+</ul>
+<h3 id="配置PicList"><a href="#配置PicList" class="headerlink" title="配置PicList"></a>配置PicList</h3><p>这里说一下是如何配置的<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0330.png" srcset="/img/loading.gif" lazyload></p>
+<p>下载安装好，打开软件，点击左边的图床，选择阿里云OSS，点击加号。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231130164448353.png" srcset="/img/loading.gif" lazyload alt="image-20231130164448353"></p>
+<p>进行阿里云OSS设置：</p>
+<p><strong>图床配置名</strong> ：按我们喜欢输入，这是在软件里面显示的；</p>
+<p><strong>设定KeyId</strong> ：就是我们刚刚保存的 <strong>AccessKeyId</strong> ；</p>
+<p><strong>设定KeySecret</strong> ：就是我们刚刚保存的 <strong>AccessKeySecret</strong> ；</p>
+<p><strong>设定Bucket</strong> ：就是我们刚刚在阿里云创建Bucket时写的名字，不可修改的那个；</p>
+<p><strong>设定存储区域</strong> ：就是我们刚刚在阿里云创建Bucket时选择的地域，要转成代码，具体参考这个地址： <a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/oss/user-guide/regions-and-endpoints">阿里云官方文档</a> ，根据我们选的地域转换成 <strong>Region ID</strong> 那一列的代码。</p>
+<p>或者参考下表查询代码：</p>
+<table>
+<thead>
+<tr>
+<th align="center">存储区域</th>
+<th align="center">区域代码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">华东 1（杭州）</td>
+<td align="center">oss-cn-hangzhou</td>
+</tr>
+<tr>
+<td align="center">华东 2（上海）</td>
+<td align="center">oss-cn-shanghai</td>
+</tr>
+<tr>
+<td align="center">华东5（南京本地地域）</td>
+<td align="center">oss-cn-nanjing</td>
+</tr>
+<tr>
+<td align="center">华东6（福州本地地域）</td>
+<td align="center">oss-cn-fuzhou</td>
+</tr>
+<tr>
+<td align="center">华北 1（青岛）</td>
+<td align="center">oss-cn-qingdao</td>
+</tr>
+<tr>
+<td align="center">华北 2（北京）</td>
+<td align="center">oss-cn-beijing</td>
+</tr>
+<tr>
+<td align="center">华北 3（张家口）</td>
+<td align="center">oss-cn-zhangjiakou</td>
+</tr>
+<tr>
+<td align="center">华北 5（呼和浩特）</td>
+<td align="center">oss-cn-huhehaote</td>
+</tr>
+<tr>
+<td align="center">华北 6（乌兰察布）</td>
+<td align="center">oss-cn-wulanchabu</td>
+</tr>
+<tr>
+<td align="center">华南 1（深圳）</td>
+<td align="center">oss-cn-shenzhen</td>
+</tr>
+<tr>
+<td align="center">华南 2（河源）</td>
+<td align="center">oss-cn-heyuan</td>
+</tr>
+<tr>
+<td align="center">华南 3（广州）</td>
+<td align="center">oss-cn-guangzhou</td>
+</tr>
+<tr>
+<td align="center">西南 1（成都）</td>
+<td align="center">oss-cn-chengdu</td>
+</tr>
+<tr>
+<td align="center">中国（香港）</td>
+<td align="center">oss-cn-hongkong</td>
+</tr>
+<tr>
+<td align="center">美国（硅谷）</td>
+<td align="center">oss-us-west-1</td>
+</tr>
+<tr>
+<td align="center">美国（弗吉尼亚）</td>
+<td align="center">oss-us-east-1</td>
+</tr>
+<tr>
+<td align="center">日本（东京）</td>
+<td align="center">oss-ap-northeast-1</td>
+</tr>
+<tr>
+<td align="center">韩国（首尔）</td>
+<td align="center">oss-ap-northeast-2</td>
+</tr>
+<tr>
+<td align="center">新加坡</td>
+<td align="center">oss-ap-southeast-1</td>
+</tr>
+<tr>
+<td align="center">澳大利亚（悉尼）</td>
+<td align="center">oss-ap-southeast-2</td>
+</tr>
+<tr>
+<td align="center">马来西亚（吉隆坡）</td>
+<td align="center">oss-ap-southeast-3</td>
+</tr>
+<tr>
+<td align="center">印度尼西亚（雅加达）</td>
+<td align="center">oss-ap-southeast-5</td>
+</tr>
+<tr>
+<td align="center">菲律宾（马尼拉）</td>
+<td align="center">oss-ap-southeast-6</td>
+</tr>
+<tr>
+<td align="center">泰国（曼谷）</td>
+<td align="center">oss-ap-southeast-7</td>
+</tr>
+<tr>
+<td align="center">印度（孟买）</td>
+<td align="center">oss-ap-south-1</td>
+</tr>
+<tr>
+<td align="center">德国（法兰克福）</td>
+<td align="center">oss-eu-central-1</td>
+</tr>
+<tr>
+<td align="center">英国（伦敦）</td>
+<td align="center">oss-eu-west-1</td>
+</tr>
+<tr>
+<td align="center">阿联酋（迪拜）</td>
+<td align="center">oss-me-east-1</td>
+</tr>
+</tbody></table>
+<p><strong>设定存储路径</strong> ：存储路径是可选填项，如果不填写，则默认存储在Bucket的根目录下。</p>
+<p>例如我是填写 <strong>img&#x2F;</strong> ，那么我上传的图片就会存储到Bucket根目录下的img文件夹里面。</p>
+<p><strong>设定自定义域名</strong> 和 <strong>设定网站后缀</strong> ：我都没有填，因为我没有域名，也不需要预处理图片<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-0350.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果有需要，可以查看<a target="_blank" rel="noopener" href="https://piclist.cn/configure#%E9%98%BF%E9%87%8C%E4%BA%91oss">官方的介绍</a> ，这里有详细介绍。</p>
+<p>填好之后点击确定，软件里的阿里云OSS设置就弄好了。</p>
+<h3 id="我的设置"><a href="#我的设置" class="headerlink" title="我的设置"></a>我的设置</h3><p>我还有一些其它的设置：</p>
+<blockquote>
+<p>为了可以在软件对存储在阿里云的图片进行预览和管理，在软件左边的管理那里填入了我的阿里云信息，具体需要的信息上面已经提到过，具体配置教程可以参考这个网址：<a target="_blank" rel="noopener" href="https://piclist.cn/manage.html#%E9%98%BF%E9%87%8C%E4%BA%91oss">https://piclist.cn/manage.html#%E9%98%BF%E9%87%8C%E4%BA%91oss</a> </p>
+</blockquote>
+<p>为了让我上传的图片更好地分类，不会显得太凌乱，我在设置-高级重命名进行了如下设置：</p>
+<p><code>&#123;localFolder:3&#125;-&#123;Y&#125;&#123;m&#125;&#123;d&#125;-&#123;h&#125;&#123;i&#125;&#123;s&#125;-&#123;filename&#125; </code></p>
+<p>在阿里云上面的结果就是</p>
+<p><code>img/1号文件夹/2号文件夹/3号文件夹-年月日-时分秒-图片名字.png</code></p>
+<p>具体的信息可以查看<a target="_blank" rel="noopener" href="https://piclist.cn/configure.html#%E4%B8%8A%E4%BC%A0%E8%AE%BE%E7%BD%AE">上传设置</a>。</p>
+<p>当然，这是我的配置，PicList还能做图片预处理，例如水印添加、图片编辑、格式转换、移除EXIF信息等等，具体的介绍可以看 <a target="_blank" rel="noopener" href="https://piclist.cn/app.html">官方文档相关介绍</a> ，按照自己的需要进行配置。</p>
+<p>设置好之后，可以点击设置&gt;同步与配置&gt;打开配置文件，打开的文件就是软件的配置文件，可以进行备份，以免意外。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>全部设置好之后就可以进行测试了，上传的方法有很多：</p>
+<ul>
+<li>直接拖进去</li>
+<li>点击选择文件上传</li>
+<li>复制粘贴进去</li>
+<li>输入网上图片的URL来进行上传</li>
+</ul>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-image-20231129092707121.png" srcset="/img/loading.gif" lazyload alt="image-20231129092707121"></p>
+<p>上传完成之后，就可以到阿里云的 <a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/bucket">Bucket列表</a> 点击自己创建的Bucket，进里面查看图片是否已经按照自己的设置上传完成了。</p>
+<p>同时上传成功的图片也会出现在软件的相册里，只要点击一下想要用的图片左下角的复制按钮，就能直接复制现成的Markdown图床链接格式(链接格式的更改是在上传页面下方的“链接格式”那里更改)。</p>
+<p>然后粘贴到Markdown文档中就能显示想要的图片了。</p>
+<h2 id="Typora配置"><a href="#Typora配置" class="headerlink" title="Typora配置"></a>Typora配置</h2><p>图床配置好，接下来就是Markdown编辑器的配置了，这里以很多人用的Typora为例。</p>
+<p>Typora的版本最好在1.6.0及以上版本，因为这些版本才能原生支持PicList，其它版本请参照<a target="_blank" rel="noopener" href="https://piclist.cn/app.html">官方文档</a>进行设置。</p>
+<p>在Typora点击文件&gt;偏好设置&gt;图像，在上传服务设定&gt;上传服务那里选择PicList，PicList路径选择我们安装PicList的位置，Windows默认安装位置是</p>
+<p><code>C:\Program Files\PicList\PicList.exe</code></p>
+<p>选好之后，点击验证图片上传选项，看到验证成功，就代表设置完成了。</p>
+<p>下面是我的设置截图，可以根据自己的需要来进行设置。</p>
+<p><img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-ff546d94dbf5d6e6710fbdb19a21398.png" srcset="/img/loading.gif" lazyload alt="ff546d94dbf5d6e6710fbdb19a21398"></p>
+<h2 id="一些注意事项"><a href="#一些注意事项" class="headerlink" title="一些注意事项"></a>一些注意事项</h2><p>在使用或者配置的过程中可能会出现一些问题。</p>
+<h3 id="一些会用到的网址"><a href="#一些会用到的网址" class="headerlink" title="一些会用到的网址"></a>一些会用到的网址</h3><p><a target="_blank" rel="noopener" href="https://free.aliyun.com/?userCode=b19efhwl">阿里云免费试用申请</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.aliyun.com/price/product#/oss/detail/ossbag">阿里云对象存储 OSS 详细价格信息</a></p>
+<p><a target="_blank" rel="noopener" href="https://buy.cloud.tencent.com/price/cos">腾讯云对象存储OSS定价详情</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.huaweicloud.com/pricing/calculator.html#/obs">华为云对象存储OSS定价详情</a></p>
+<p><a target="_blank" rel="noopener" href="https://piclist.cn/app.html">PicList软件介绍和使用说明</a></p>
+<p><a target="_blank" rel="noopener" href="https://typora.io/">Typora主页</a></p>
+<h3 id="写作流程"><a href="#写作流程" class="headerlink" title="写作流程"></a>写作流程</h3><ol>
+<li>我会先在Typora里面写好Markdown文章，插入图片，因为我在Typora设置了在插入图片的时候，会复制图片到和文章同一文件夹里面的attachments文件夹里面，也就是我在本地会有备份；</li>
+<li>写好检查过后，点击格式&gt;图像&gt;上传所有本地图片，将所有图片上传到图床，图片同时也会自动更新成为图床链接，然后选择全文复制粘贴到需要的地方就行了。</li>
+</ol>
+<p><strong>PS：</strong></p>
+<ol>
+<li>不能上传文件名重复的图片，因为会最后一张图片会覆盖前一张同名图片；</li>
+<li>流量越多，费用越多，要注意图片的大小，定时查看阿里云的<a target="_blank" rel="noopener" href="https://usercenter2.aliyun.com/home">费用明细</a></li>
+</ol>
+<p>阿里云+PicList+Typora搭建图床并使用就讲完了，希望能对大家有所帮助！<img src="https://starlife.oss-cn-guangzhou.aliyuncs.com/img/%E5%85%AC%E4%BC%97%E5%8F%B7/107-%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91%E5%92%8CPicList%E5%BB%BA%E7%AB%8B%E5%9B%BE%E5%BA%8A/attachments-20231130-171909-8010-1701335544239-1.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>用阿里云+PicList+Typora搭建图床并使用</div>
+      <div>https://blog.starlife.top/2023/12/14/用阿里云-PicList-Typora搭建图床并使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>星空人生</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年12月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/12/13/%E7%AC%94%E8%AE%B0%E6%9C%AC%E7%94%B5%E8%84%91%E5%B1%8F%E5%B9%95%E7%94%BB%E9%9D%A2%E7%AA%81%E7%84%B6%E9%A2%9C%E8%89%B2%E9%B2%9C%E8%89%B3%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/" title="笔记本电脑屏幕画面突然颜色鲜艳，如何解决">
+                        <span class="hidden-mobile">笔记本电脑屏幕画面突然颜色鲜艳，如何解决</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://cdn.staticfile.org/waline/2.15.5/waline.min.css')
+      Fluid.utils.createScript('https://cdn.staticfile.org/waline/2.15.5/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://comment.starlife.top/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
